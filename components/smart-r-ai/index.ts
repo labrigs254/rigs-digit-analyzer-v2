@@ -18,8 +18,11 @@ import { DigitPicker } from '@/components/smart-r-ai/DigitPicker';
 import { ContractSelector } from '@/components/smart-r-ai/ContractSelector';
 import { FocusedMatchesDiffersCard } from '@/components/smart-r-ai/FocusedMatchesDiffersCard';
 
+import { SmartRANavigation } from '@/components/smart-r-ai/SmartRANavigation';
+
 export {
   SmartRAIHeader,
+  SmartRANavigation,
   DigitProbabilityTable,
   PredictionPanel,
   PatternPanel,

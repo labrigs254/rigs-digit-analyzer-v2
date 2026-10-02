@@ -13,6 +13,7 @@ import { WifiOff, Loader2, ChevronDown } from 'lucide-react';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
 import {
   SmartRAIHeader,
+  SmartRANavigation,
   DigitProbabilityTable,
   PatternPanel,
   RegimePanel,
@@ -118,10 +119,27 @@ function SmartRAIDashboard() {
         onLogout={() => {}}
         onSwitchAccount={async () => {}}
         actions={<ThemeToggle />}
+        hideAuth={true}
       />
 
       <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:px-8 py-6 flex flex-col gap-6 overflow-x-hidden">
         
+        {/* ========================================================= */}
+        {/* STRATEGY NAVIGATION (1-CLICK MODE ISOLATION)              */}
+        {/* ========================================================= */}
+        <SmartRANavigation activeMode={activeMarketTab === 'even-odd' ? 'even-odd' : activeMarketTab === 'over-under' ? 'over-under' : activeMarketTab === 'matches-differs' ? 'matches-differs' : 'master'} onSelectMode={(m) => {
+          if (m === 'even-odd') {
+            window.location.href = '/smart-r-ai/even-odd';
+          } else if (m === 'over-under') {
+            window.location.href = '/smart-r-ai/over-under';
+          } else if (m === 'matches-differs') {
+            setActiveMarketTab('matches-differs');
+            trading.setContractMode('DIGITMATCH');
+          } else {
+            setActiveMarketTab('auto');
+          }
+        }} />
+
         {/* ========================================================= */}
         {/* SECTION A — PAGE HEADER & STATUS BANNERS                  */}
         {/* ========================================================= */}

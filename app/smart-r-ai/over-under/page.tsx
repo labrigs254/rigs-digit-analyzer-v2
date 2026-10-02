@@ -6,6 +6,7 @@ import { useDigitsTrading } from '@/hooks/use-digits-trading';
 import { useSmartRAI } from '@/hooks/use-smart-r-ai';
 import { SymbolSelector } from '@/components/custom/symbol-selector';
 import { Header } from '@/components/custom/header';
+import { SmartRANavigation } from '@/components/smart-r-ai/SmartRANavigation';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
 import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronRight, Activity, AlertCircle, PlayCircle, Clock } from 'lucide-react';
@@ -116,17 +117,19 @@ function OverUnderGuidedFlow() {
   return (
     <main className="flex min-h-dvh flex-col bg-background">
       <Header
-        authState={authState}
-        accounts={accounts}
-        activeAccount={activeAccount}
-        onLogin={login}
-        onSignUp={signUp}
-        onLogout={logout}
-        onSwitchAccount={switchAccount}
+        authState={'unauthenticated'}
+        accounts={[]}
+        activeAccount={null}
+        onLogin={async () => {}}
+        onSignUp={async () => {}}
+        onLogout={() => {}}
+        onSwitchAccount={async () => {}}
         actions={<ThemeToggle />}
+        hideAuth={true}
       />
 
-      <div className="flex-1 w-full max-w-4xl mx-auto px-4 lg:px-8 py-8 flex flex-col items-center">
+      <div className="flex-1 w-full max-w-4xl mx-auto px-4 lg:px-8 py-6 flex flex-col items-center gap-6">
+        <SmartRANavigation activeMode="over-under" />
 
         {!isConnected && (
           <div className="w-full max-w-lg mb-6 flex items-center justify-between rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-500 text-sm">

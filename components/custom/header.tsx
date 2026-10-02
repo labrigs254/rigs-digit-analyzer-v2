@@ -39,6 +39,8 @@ interface HeaderProps {
   showAppName?: boolean;
   /** Optional controls rendered to the left of the login/logout button (e.g. a theme toggle). */
   actions?: React.ReactNode;
+  /** When true, hides login and signup buttons completely (e.g. on public AI analyzer pages). */
+  hideAuth?: boolean;
 }
 
 function formatBalance(balance: string, locale: string): string {
@@ -262,6 +264,7 @@ export function Header({
   appName,
   showAppName,
   actions,
+  hideAuth = false,
 }: HeaderProps) {
   const { currentLang, localize } = useAppTranslations();
   const numberLocale = LANGUAGE_LOCALES[currentLang];
@@ -383,15 +386,17 @@ export function Header({
             </PopoverContent>
           </Popover>
         )}
-        <div className="hidden lg:flex items-center gap-3 shrink-0">
-          <AuthButtons
-            isAuthenticated={isAuthenticated}
-            isAuthenticating={isAuthenticating}
-            onLogin={onLogin}
-            onLogout={onLogout}
-            onSignUp={onSignUp}
-          />
-        </div>
+        {!hideAuth && (
+          <div className="hidden lg:flex items-center gap-3 shrink-0">
+            <AuthButtons
+              isAuthenticated={isAuthenticated}
+              isAuthenticating={isAuthenticating}
+              onLogin={onLogin}
+              onLogout={onLogout}
+              onSignUp={onSignUp}
+            />
+          </div>
+        )}
         <DialogPrimitive.Trigger asChild>
           <Button
             variant="ghost"
@@ -451,18 +456,20 @@ export function Header({
             </Link>
           </div>
         </div>
-        <div className="mt-auto px-6 pb-8 pt-4 flex flex-col gap-3 border-t border-border">
-          <MobileAuthButtons
-            isAuthenticated={isAuthenticated}
-            isAuthenticating={isAuthenticating}
-            onLogin={onLogin}
-            onLogout={() => {
-              setMobileMenuOpen(false);
-              onLogout();
-            }}
-            onSignUp={onSignUp}
-          />
-        </div>
+        {!hideAuth && (
+          <div className="mt-auto px-6 pb-8 pt-4 flex flex-col gap-3 border-t border-border">
+            <MobileAuthButtons
+              isAuthenticated={isAuthenticated}
+              isAuthenticating={isAuthenticating}
+              onLogin={onLogin}
+              onLogout={() => {
+                setMobileMenuOpen(false);
+                onLogout();
+              }}
+              onSignUp={onSignUp}
+            />
+          </div>
+        )}
       </DialogPrimitive.Content>
       </FocusScope>
       </DialogPrimitive.Portal>
