@@ -55,7 +55,7 @@ function CollapsibleSection({ title, defaultOpen = false, children }: { title: s
 
 function SmartRAIDashboard() {
   const { ws, isConnected, isExhausted, auth } = useDerivWSContext();
-  const { authState, accounts, activeAccount, login, signUp, logout, switchAccount } = auth;
+  const { logout } = auth;
 
   // Single source of truth for all DERIVE trading state + WS connection
   const trading = useDigitsTrading({
@@ -111,13 +111,12 @@ function SmartRAIDashboard() {
   return (
     <main className="flex min-h-dvh flex-col bg-background">
       <Header
-        authState={authState}
-        accounts={accounts}
-        activeAccount={activeAccount}
-        onLogin={login}
-        onSignUp={signUp}
-        onLogout={logout}
-        onSwitchAccount={switchAccount}
+        authState={'unauthenticated'}
+        accounts={[]}
+        activeAccount={null}
+        onLogin={async () => {}}
+        onLogout={() => {}}
+        onSwitchAccount={async () => {}}
         actions={<ThemeToggle />}
       />
 
@@ -150,6 +149,59 @@ function SmartRAIDashboard() {
             <div>
               <span className="font-bold">WAITING FOR LIVE TICKS</span>
               <span className="ml-2 text-amber-300/80">Subscribing to tick stream for {activeSymbol?.underlying_symbol_name ?? 'market'}…</span>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================= */}
+        {/* SECTION A2 — LIVE MARKET OVERVIEW (ALL SYMBOLS)           */}
+        {/* ========================================================= */}
+        {symbols.length > 0 && (
+          <div className="rounded-2xl border border-violet-500/20 bg-violet-500/5 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold uppercase tracking-widest text-violet-400">⚡ Live Market Overview — All Symbols</span>
+              <span className="text-[10px] text-muted-foreground">Click a market below to analyze it</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+              {symbols.map((sym) => {
+                const isActive = sym.underlying_symbol === activeSymbol?.underlying_symbol;
+                return (
+                  <button
+                    key={sym.underlying_symbol}
+                    onClick={() => trading.selectSymbol(sym.underlying_symbol)}
+                    className={cn(
+                      'flex flex-col items-center justify-center rounded-xl border p-2.5 text-center transition-all duration-200 cursor-pointer',
+                      isActive
+                        ? 'border-violet-500/60 bg-violet-500/20 shadow-[0_0_12px_rgba(139,92,246,0.3)]'
+                        : 'border-border/40 bg-card hover:border-violet-500/40 hover:bg-violet-500/10'
+                    )}
+                  >
+                    <span className={cn('text-[10px] font-bold uppercase tracking-wide truncate w-full', isActive ? 'text-violet-300' : 'text-muted-foreground')}>
+                      {sym.underlying_symbol_name ?? sym.underlying_symbol}
+                    </span>
+                    {isActive && analysis ? (
+                      <>
+                        <span className="text-lg font-black text-violet-400 mt-1">
+                          {analysis.lastDigit !== null ? analysis.lastDigit : '—'}
+                        </span>
+                        <span className={cn(
+                          'text-[10px] font-bold mt-0.5 px-1.5 py-0.5 rounded-full',
+                          analysis.prediction.noTrade
+                            ? 'bg-yellow-500/20 text-yellow-400'
+                            : analysis.prediction.signalState === 'SIGNAL'
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : 'bg-blue-500/20 text-blue-400'
+                        )}>
+                          {analysis.prediction.noTrade ? 'WAIT' : analysis.prediction.coPilot.action}
+                        </span>
+                        <span className="text-[9px] text-muted-foreground mt-0.5">{prices.length} ticks</span>
+                      </>
+                    ) : (
+                      <span className="text-[10px] text-muted-foreground/50 mt-1">{isActive ? 'Loading…' : 'Click to analyze'}</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
