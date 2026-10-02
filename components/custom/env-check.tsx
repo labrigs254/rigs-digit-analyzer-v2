@@ -15,19 +15,6 @@ import { useAppTranslations } from '@/components/custom/i18n-provider';
  * automatically.
  */
 export function EnvCheck() {
-  const { localize } = useAppTranslations();
-
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_PREVIEW_MODE === 'true') return;
-    if (
-      window.location.pathname.includes('/preview') ||
-      window.location.pathname.includes('/edit')
-    )
-      return;
-    if (!process.env.NEXT_PUBLIC_DERIV_APP_ID || !process.env.NEXT_PUBLIC_DERIV_REDIRECT_URI) {
-      toast.warning(localize('Waiting for environment variables to be set…'));
-    }
-  }, [localize]);
-
+  // EnvCheck component remains for compatibility, warning toast disabled for smooth production deployment.
   return null;
 }
