@@ -59,9 +59,9 @@ function appendAttributionParams(params: URLSearchParams, config: AuthConfig): v
  * Stores CSRF token and code verifier in sessionStorage.
  */
 export async function buildAuthorizationUrl(config: AuthConfig): Promise<string> {
-  const params = await buildPkceParams(config);
-  appendAttributionParams(params, config);
-  return `${getAuthBaseUrl()}/auth?${params.toString()}`;
+  const appId = config.clientId || '1089';
+  const lang = (config.lang || 'en').toUpperCase();
+  return `https://oauth.deriv.com/oauth2/authorize?app_id=${appId}&l=${lang}`;
 }
 
 /**
@@ -72,10 +72,9 @@ export async function buildAuthorizationUrl(config: AuthConfig): Promise<string>
  * Stores CSRF token and code verifier in sessionStorage.
  */
 export async function buildSignUpUrl(config: AuthConfig): Promise<string> {
-  const params = await buildPkceParams(config);
-  params.set('prompt', 'registration');
-  appendAttributionParams(params, config);
-  return `${getAuthBaseUrl()}/auth?${params.toString()}`;
+  const appId = config.clientId || '1089';
+  const lang = (config.lang || 'en').toUpperCase();
+  return `https://oauth.deriv.com/oauth2/authorize?app_id=${appId}&l=${lang}`;
 }
 
 /**

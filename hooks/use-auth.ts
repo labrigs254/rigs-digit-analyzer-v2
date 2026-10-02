@@ -10,6 +10,7 @@ import {
   getWebSocketOTP,
   logout as coreLogout,
   getAuthInfo,
+  storeAuthInfo,
   getDerivAccounts,
   getActiveLoginId,
   storeDerivAccounts,
@@ -223,7 +224,67 @@ export function useAuth(): UseAuthReturn {
       const url = new URL(window.location.href);
       const code = url.searchParams.get('code');
 
-      // Phase 3-5: Handle OAuth callback
+      // Handle standard Deriv OAuth callback (token1, acct1...)
+      const token1 = url.searchParams.get('token1');
+      if (token1) {
+        setAuthState('authenticating');
+        try {
+          const accounts: DerivAccount[] = [];
+          let i = 1;
+          while (url.searchParams.get(`acct${i}`)) {
+            const acct = url.searchParams.get(`acct${i}`)!;
+            const token = url.searchParams.get(`token${i}`)!;
+            const cur = url.searchParams.get(`cur${i}`) || 'USD';
+            const isDemo = acct.startsWith('VRTC') || acct.startsWith('VRW');
+            accounts.push({
+              account_id: acct,
+              account_type: isDemo ? 'demo' : 'real',
+              balance: '0',
+              currency: cur,
+              group: isDemo ? 'demo' : 'real',
+              status: 'active',
+            });
+            i++;
+          }
+
+          const authInfo: AuthInfo = {
+            access_token: token1,
+            refresh_token: token1,
+            token_type: 'bearer',
+            expires_in: 31536000,
+            expires_at: Math.floor(Date.now() / 1000) + 31536000,
+            scope: 'read trade payments admin',
+          };
+
+          storeAuthInfo(authInfo);
+          storeDerivAccounts(accounts);
+          if (accounts.length > 0) {
+            setActiveLoginId(accounts[0].account_id);
+            setAccountType(accounts[0].account_type);
+          }
+
+          if (typeof window !== 'undefined') {
+            const cleanUrl = new URL(window.location.href);
+            let j = 1;
+            while (cleanUrl.searchParams.has(`acct${j}`)) {
+              cleanUrl.searchParams.delete(`acct${j}`);
+              cleanUrl.searchParams.delete(`token${j}`);
+              cleanUrl.searchParams.delete(`cur${j}`);
+              j++;
+            }
+            window.history.replaceState(window.history.state, '', cleanUrl.pathname + cleanUrl.search);
+          }
+
+          await completeAuth(authInfo);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Authentication failed');
+          setAuthState('error');
+          clearAllAuthData();
+        }
+        return;
+      }
+
+      // Phase 3-5: Handle OAuth PKCE callback
       if (code) {
         setAuthState('authenticating');
         try {
