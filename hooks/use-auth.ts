@@ -26,9 +26,9 @@ import { readStoredLanguage } from '@/lib/i18n';
 
 function getAuthConfig(lang?: string): AuthConfig {
   const config: AuthConfig = {
-    clientId: process.env.NEXT_PUBLIC_DERIV_APP_ID ?? '',
+    clientId: process.env.NEXT_PUBLIC_DERIV_APP_ID || '1089',
     redirectUri:
-      process.env.NEXT_PUBLIC_DERIV_REDIRECT_URI ??
+      process.env.NEXT_PUBLIC_DERIV_REDIRECT_URI ||
       (typeof window !== 'undefined' ? window.location.origin : ''),
   };
 
