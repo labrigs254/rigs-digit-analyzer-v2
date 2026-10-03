@@ -19,6 +19,11 @@ import {
   AlertTriangle,
   Clock,
   ArrowRight,
+  Brain,
+  Zap,
+  Layers,
+  DollarSign,
+  TrendingUp,
 } from 'lucide-react';
 import type { OpenPosition } from '@/hooks/use-open-positions';
 
@@ -117,7 +122,7 @@ function MatchesDiffersWorkspaceContent() {
   }, [contractChoice, selectedDigit]);
 
   // Connect Smart R AI Engine
-  const { analysis, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
+  const { analysis, advanced, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
     prices,
     pipSize,
     isConnected: trading.isConnected,
@@ -125,6 +130,7 @@ function MatchesDiffersWorkspaceContent() {
     contractMode: contractChoice,
     selectedDigit,
     tradeType: 'matches-differs',
+    proposalPayout: trading.proposal?.payout ? trading.proposal.payout / Number(trading.stake || 1) : 1.92,
   });
 
   // Calculate real tick stats & digit candidates across windows
@@ -155,24 +161,19 @@ function MatchesDiffersWorkspaceContent() {
     const counts25 = Array(10).fill(0);
     last25.forEach((d) => counts25[d]++);
 
-    // Score digits based on frequency stability across 100, 50, and 25 ticks
     const scores = Array.from({ length: 10 }, (_, digit) => {
       const f100 = (counts100[digit] / (last100.length || 1)) * 100;
       const f50 = (counts50[digit] / (last50.length || 1)) * 100;
       const f25 = (counts25[digit] / (last25.length || 1)) * 100;
-
-      // Weighted frequency score favoring recent stability
       const compositeScore = f100 * 0.4 + f50 * 0.35 + f25 * 0.25;
       return { digit, f100: Math.round(f100), f50: Math.round(f50), f25: Math.round(f25), compositeScore };
     });
 
-    // Sort candidates descending by composite score
     const sorted = [...scores].sort((a, b) => b.compositeScore - a.compositeScore);
     const topCandidate = sorted[0];
     const secondCandidate = sorted[1];
     const thirdCandidate = sorted[2];
 
-    // Determine status
     const scoreDiff = topCandidate.compositeScore - secondCandidate.compositeScore;
     let status: 'REVIEW' | 'WATCH' | 'WAIT' | 'DATA UNAVAILABLE' = 'WATCH';
     let statusLabel = 'WATCHING DIGIT PATTERNS';
@@ -246,7 +247,7 @@ function MatchesDiffersWorkspaceContent() {
             MATCHES / DIFFERS
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto px-2">
-            Smart analysis of the last digit using live Deriv tick data.
+            Smart quantitative analysis of the last digit using live Deriv tick data.
           </p>
 
           {/* Quick Header Status Bar — Mobile Responsive Grid */}
@@ -313,7 +314,7 @@ function MatchesDiffersWorkspaceContent() {
               </div>
 
               <p className="text-xs text-muted-foreground">
-                Analyzing the latest Deriv ticks to identify the strongest observed digit candidates.
+                Analyzing latest Deriv tick frequencies to identify candidate digits based on rolling stability.
               </p>
 
               {/* Main Candidate Highlight Box */}
@@ -397,6 +398,78 @@ function MatchesDiffersWorkspaceContent() {
                 </div>
               )}
             </section>
+
+            {/* NEW SECTION 2.5 — SMART R QUANTITATIVE AI INSIGHTS CARD */}
+            {advanced && (
+              <section className="rounded-3xl border border-emerald-500/30 bg-card p-4 sm:p-6 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b pb-2.5">
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 flex items-center gap-1.5">
+                    <Brain className="h-4 w-4" /> QUANTITATIVE AI INSIGHTS PILLARS
+                  </span>
+                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 font-bold px-2 py-0.5 rounded">V2 ENGINE</span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  
+                  {/* Pillar 1: ML Pattern Signal */}
+                  <div className="rounded-2xl border bg-muted/10 p-3 space-y-1">
+                    <div className="flex items-center gap-1 text-[10px] font-extrabold text-muted-foreground uppercase">
+                      <Brain className="h-3 w-3 text-emerald-400" />
+                      <span>Neural ML Signal</span>
+                    </div>
+                    <div className="text-sm font-black text-foreground">
+                      {advanced.ml.signal} ({advanced.ml.confidence}%)
+                    </div>
+                    <span className="text-[10px] text-muted-foreground block truncate">
+                      {advanced.ml.explanation}
+                    </span>
+                  </div>
+
+                  {/* Pillar 2: Confluence Gauge */}
+                  <div className="rounded-2xl border bg-muted/10 p-3 space-y-1">
+                    <div className="flex items-center gap-1 text-[10px] font-extrabold text-muted-foreground uppercase">
+                      <Layers className="h-3 w-3 text-emerald-400" />
+                      <span>Timeframe Confluence</span>
+                    </div>
+                    <div className={cn('text-sm font-black', advanced.confluence.isGreenLight ? 'text-emerald-400' : 'text-yellow-400')}>
+                      {advanced.confluence.state} ({advanced.confluence.score}%)
+                    </div>
+                    <span className="text-[10px] text-muted-foreground block">
+                      Across 25, 50, 100 & 500 Ticks
+                    </span>
+                  </div>
+
+                  {/* Pillar 3: Tick Velocity & Volatility */}
+                  <div className="rounded-2xl border bg-muted/10 p-3 space-y-1">
+                    <div className="flex items-center gap-1 text-[10px] font-extrabold text-muted-foreground uppercase">
+                      <Zap className="h-3 w-3 text-emerald-400" />
+                      <span>Tick Velocity</span>
+                    </div>
+                    <div className="text-sm font-black text-foreground">
+                      {advanced.velocity.regime}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground block">
+                      Spike Factor: {advanced.velocity.spikeFactor.toFixed(2)}x
+                    </span>
+                  </div>
+
+                  {/* Pillar 4: Kelly Sizing Advice */}
+                  <div className="rounded-2xl border bg-muted/10 p-3 space-y-1">
+                    <div className="flex items-center gap-1 text-[10px] font-extrabold text-muted-foreground uppercase">
+                      <DollarSign className="h-3 w-3 text-emerald-400" />
+                      <span>Kelly Stake Advice</span>
+                    </div>
+                    <div className={cn('text-sm font-black', advanced.kelly.hasEdge ? 'text-emerald-400' : 'text-muted-foreground')}>
+                      {advanced.kelly.hasEdge ? `$${advanced.kelly.recommendedStake.toFixed(2)}` : 'NO EDGE'}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground block">
+                      Optimal Risk Fraction: {(advanced.kelly.fraction * 100).toFixed(1)}%
+                    </span>
+                  </div>
+
+                </div>
+              </section>
+            )}
 
             {/* SECTION 3 — ALTERNATIVE CANDIDATES & SUGGESTED SETUP */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">

@@ -14,7 +14,10 @@ import {
   Wifi,
   Hash,
   Sparkles,
-  BarChart2,
+  Brain,
+  Zap,
+  Layers,
+  DollarSign,
 } from 'lucide-react';
 
 // --- Shared Navigation Sub-Header with Mobile Touch Scroll ---
@@ -98,7 +101,7 @@ function DigitsWorkspaceContent() {
 
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
 
-  const { analysis, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
+  const { analysis, advanced, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
     prices,
     pipSize,
     isConnected: trading.isConnected,
@@ -220,7 +223,7 @@ function DigitsWorkspaceContent() {
             </div>
           </section>
 
-          {/* SECTION 3 — SMART R DIGIT FREQUENCY SPECTRUM */}
+          {/* SECTION 3 — SMART R DIGIT FREQUENCY SPECTRUM & QUANTITATIVE PILLARS */}
           <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-4 sm:space-y-6">
             <div className="flex items-center justify-between border-b pb-2.5">
               <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-amber-400 flex items-center gap-1.5">
@@ -242,6 +245,33 @@ function DigitsWorkspaceContent() {
                 <span className="text-xs font-bold text-muted-foreground block">{lowestDigit.pct}% ({lowestDigit.count} times)</span>
               </div>
             </div>
+
+            {/* QUANTITATIVE PILLARS CARD */}
+            {advanced && (
+              <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3">
+                <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest block flex items-center gap-1">
+                  <Brain className="h-3.5 w-3.5" /> QUANTITATIVE ENGINE INSIGHTS
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center">
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Confluence Score</span>
+                    <span className="font-black text-amber-400">{advanced.confluence.score}%</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Neural ML Signal</span>
+                    <span className="font-black text-foreground">{advanced.ml.signal}</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Tick Velocity</span>
+                    <span className="font-black text-foreground">{advanced.velocity.regime}</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Kelly Stake Advice</span>
+                    <span className="font-mono font-black text-emerald-400">{advanced.kelly.hasEdge ? `$${advanced.kelly.recommendedStake.toFixed(2)}` : 'NO EDGE'}</span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Full 0-9 Digit Grid */}
             <div>

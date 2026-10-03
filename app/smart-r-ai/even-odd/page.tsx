@@ -15,6 +15,10 @@ import {
   Wifi,
   Scale,
   Sparkles,
+  Brain,
+  Zap,
+  Layers,
+  DollarSign,
 } from 'lucide-react';
 import type { OpenPosition } from '@/hooks/use-open-positions';
 
@@ -106,13 +110,14 @@ function EvenOddWorkspaceContent() {
     trading.setContractMode(contractChoice);
   }, [contractChoice]);
 
-  const { analysis, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
+  const { analysis, advanced, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
     prices,
     pipSize,
     isConnected: trading.isConnected,
     symbol: activeSymbol?.underlying_symbol_name ?? 'UNKNOWN',
     contractMode: contractChoice,
     tradeType: 'even-odd',
+    proposalPayout: trading.proposal?.payout ? trading.proposal.payout / Number(trading.stake || 1) : 1.92,
   });
 
   const hasNoTicks = prices.length === 0;
@@ -161,7 +166,7 @@ function EvenOddWorkspaceContent() {
             EVEN / ODD WORKSPACE
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto px-2">
-            Select a market, choose Even or Odd, review the live analysis, then decide whether to trade.
+            Select a market, choose Even or Odd, review quantitative analysis, then decide whether to trade.
           </p>
 
           {/* Quick Status Bar Mobile Grid */}
@@ -267,7 +272,7 @@ function EvenOddWorkspaceContent() {
             </div>
           </section>
 
-          {/* SECTION 4 — SMART R EVEN / ODD ANALYSIS */}
+          {/* SECTION 4 — SMART R EVEN / ODD ANALYSIS & QUANTITATIVE PILLARS */}
           <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-4 sm:space-y-6">
             <div className="flex items-center justify-between border-b pb-2.5">
               <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-violet-400 flex items-center gap-1.5">
@@ -294,6 +299,35 @@ function EvenOddWorkspaceContent() {
                 <span className="text-xl sm:text-2xl font-black text-orange-400">{oddPct}%</span>
               </div>
             </div>
+
+            {/* QUANTITATIVE PILLARS CARD */}
+            {advanced && (
+              <div className="rounded-2xl border border-violet-500/30 bg-violet-500/5 p-4 space-y-3">
+                <span className="text-[10px] font-black text-violet-400 uppercase tracking-widest block flex items-center gap-1">
+                  <Brain className="h-3.5 w-3.5" /> QUANTITATIVE ENGINE INSIGHTS
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center">
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Markov Transition</span>
+                    <span className="font-mono font-black text-foreground">
+                      {(advanced.markov.nextEvenGivenEven * 100).toFixed(0)}% Even
+                    </span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">ML Signal</span>
+                    <span className="font-black text-violet-400">{advanced.ml.signal}</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Tick Velocity</span>
+                    <span className="font-black text-foreground">{advanced.velocity.regime}</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Kelly Stake Advice</span>
+                    <span className="font-mono font-black text-emerald-400">{advanced.kelly.hasEdge ? `$${advanced.kelly.recommendedStake.toFixed(2)}` : 'NO EDGE'}</span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div>

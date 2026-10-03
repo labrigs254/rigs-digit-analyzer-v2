@@ -15,6 +15,10 @@ import {
   Wifi,
   TrendingUp,
   Sparkles,
+  Brain,
+  Zap,
+  Layers,
+  DollarSign,
 } from 'lucide-react';
 import type { OpenPosition } from '@/hooks/use-open-positions';
 
@@ -108,7 +112,7 @@ function OverUnderWorkspaceContent() {
     trading.setSelectedDigit(threshold);
   }, [contractChoice, threshold]);
 
-  const { analysis, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
+  const { analysis, advanced, activeWindowSize, windowSizes, setActiveWindowSize } = useSmartRAI({
     prices,
     pipSize,
     isConnected: trading.isConnected,
@@ -116,6 +120,7 @@ function OverUnderWorkspaceContent() {
     contractMode: contractChoice,
     selectedDigit: threshold,
     tradeType: 'over-under',
+    proposalPayout: trading.proposal?.payout ? trading.proposal.payout / Number(trading.stake || 1) : 1.92,
   });
 
   const hasNoTicks = prices.length === 0;
@@ -166,7 +171,7 @@ function OverUnderWorkspaceContent() {
             OVER / UNDER WORKSPACE
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto px-2">
-            Select a market, select your threshold digit, choose Over or Under, then review live analysis.
+            Select a market, select your threshold digit, choose Over or Under, then review quantitative analysis.
           </p>
 
           {/* Quick Status Bar Mobile Grid */}
@@ -214,7 +219,6 @@ function OverUnderWorkspaceContent() {
 
             <div>
               <label className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest mb-1.5 block">Threshold Digit (0-9)</label>
-              {/* Mobile Optimized Grid: 5 Columns per Row */}
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5 sm:gap-2">
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => {
                   const isSelected = threshold === digit;
@@ -296,7 +300,7 @@ function OverUnderWorkspaceContent() {
             </div>
           </section>
 
-          {/* SECTION 4 — SMART R OVER / UNDER ANALYSIS */}
+          {/* SECTION 4 — SMART R OVER / UNDER ANALYSIS & QUANTITATIVE PILLARS */}
           <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-4 sm:space-y-6">
             <div className="flex items-center justify-between border-b pb-2.5">
               <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-blue-400 flex items-center gap-1.5">
@@ -322,6 +326,33 @@ function OverUnderWorkspaceContent() {
                 <span className="text-[9px] sm:text-[10px] text-muted-foreground block font-mono">{equalCount}/{sampleSize}</span>
               </div>
             </div>
+
+            {/* QUANTITATIVE PILLARS CARD */}
+            {advanced && (
+              <div className="rounded-2xl border border-blue-500/30 bg-blue-500/5 p-4 space-y-3">
+                <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest block flex items-center gap-1">
+                  <Brain className="h-3.5 w-3.5" /> QUANTITATIVE ENGINE INSIGHTS
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center">
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Confluence Gauge</span>
+                    <span className="font-black text-blue-400">{advanced.confluence.state} ({advanced.confluence.score}%)</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">ML Signal</span>
+                    <span className="font-black text-foreground">{advanced.ml.signal}</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Tick Velocity</span>
+                    <span className="font-black text-foreground">{advanced.velocity.regime}</span>
+                  </div>
+                  <div className="bg-card border p-2.5 rounded-xl">
+                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase block">Kelly Stake Advice</span>
+                    <span className="font-mono font-black text-emerald-400">{advanced.kelly.hasEdge ? `$${advanced.kelly.recommendedStake.toFixed(2)}` : 'NO EDGE'}</span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="border-t pt-4">
               <button
