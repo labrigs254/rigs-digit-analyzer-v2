@@ -4,67 +4,11 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/custom/header';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
-import { Target, Scale, TrendingUp, Binary, ChevronRight, Sparkles } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Target, Scale, TrendingUp, Hash, ArrowRight, Sparkles } from 'lucide-react';
 
-function MainTradingMenuContent() {
-  const tradingCards = [
-    {
-      id: 'matches-differs',
-      title: 'MATCHES / DIFFERS',
-      icon: Target,
-      href: '/smart-r-ai/matches-differs',
-      description: 'Trade based on the last digit matching or differing from your selected digit.',
-      buttonText: 'OPEN MATCHES / DIFFERS',
-      gradient: 'from-emerald-500/20 via-emerald-500/10 to-transparent',
-      borderColor: 'border-emerald-500/40 hover:border-emerald-500/80',
-      btnColor: 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20',
-      badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-      iconColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-    },
-    {
-      id: 'even-odd',
-      title: 'EVEN / ODD',
-      icon: Scale,
-      href: '/smart-r-ai/even-odd',
-      description: 'Trade whether the final digit will be even (0, 2, 4, 6, 8) or odd (1, 3, 5, 7, 9).',
-      buttonText: 'OPEN EVEN / ODD',
-      gradient: 'from-violet-500/20 via-violet-500/10 to-transparent',
-      borderColor: 'border-violet-500/40 hover:border-violet-500/80',
-      btnColor: 'bg-violet-600 hover:bg-violet-500 text-white shadow-violet-500/20',
-      badgeColor: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
-      iconColor: 'text-violet-400 bg-violet-500/10 border-violet-500/30',
-    },
-    {
-      id: 'over-under',
-      title: 'OVER / UNDER',
-      icon: TrendingUp,
-      href: '/smart-r-ai/over-under',
-      description: 'Trade whether the final digit will be over or under your selected threshold.',
-      buttonText: 'OPEN OVER / UNDER',
-      gradient: 'from-blue-500/20 via-blue-500/10 to-transparent',
-      borderColor: 'border-blue-500/40 hover:border-blue-500/80',
-      btnColor: 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20',
-      badgeColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      iconColor: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-    },
-    {
-      id: 'digit-contracts',
-      title: 'DIGIT CONTRACTS',
-      icon: Binary,
-      href: '/smart-r-ai/digits',
-      description: 'Analyze rolling digit distributions and multi-market frequencies in real-time.',
-      buttonText: 'OPEN DIGIT CONTRACTS',
-      gradient: 'from-amber-500/20 via-amber-500/10 to-transparent',
-      borderColor: 'border-amber-500/40 hover:border-amber-500/80',
-      btnColor: 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-500/20',
-      badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-      iconColor: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
-    },
-  ];
-
+function SmartRAIMenuContent() {
   return (
-    <main className="flex min-h-dvh flex-col bg-background selection:bg-violet-500/30">
+    <main className="flex min-h-dvh flex-col bg-background selection:bg-emerald-500/30">
       <Header
         authState={'unauthenticated'}
         accounts={[]}
@@ -76,87 +20,128 @@ function MainTradingMenuContent() {
         hideAuth={true}
       />
 
-      <div className="flex-1 w-full max-w-6xl mx-auto px-4 lg:px-8 py-12 flex flex-col items-center justify-center">
+      <div className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 flex flex-col items-center justify-center">
         
-        {/* Main Title Section */}
-        <div className="text-center space-y-4 max-w-2xl mb-12 animate-in fade-in zoom-in-95 duration-500">
-          <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-1.5 text-xs font-bold text-violet-400">
+        {/* HEADER TITLE */}
+        <div className="w-full text-center space-y-3 mb-8 sm:mb-12">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold text-emerald-400">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>SMART R AI ENGINE</span>
+            <span>DERIVE DEDICATED WORKSPACES</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground uppercase">
-            LET'S CHOOSE WHAT TO TRADE
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-foreground uppercase">
+            LET&apos;S CHOOSE WHAT TO TRADE
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground font-medium">
-            Select a contract type to open its dedicated trading workspace.
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto px-2">
+            Select a contract type below to open its dedicated trading workspace with focused analysis and controls.
           </p>
         </div>
 
-        {/* 4 Large Menu Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full animate-in fade-in slide-in-from-bottom-6 duration-700">
-          {tradingCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <div
-                key={card.id}
-                className={cn(
-                  'group relative flex flex-col justify-between rounded-3xl border bg-card/60 p-8 backdrop-blur-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-1',
-                  card.borderColor
-                )}
-              >
-                {/* Background Accent Gradient */}
-                <div
-                  className={cn(
-                    'absolute inset-0 rounded-3xl bg-gradient-to-br opacity-50 transition-opacity group-hover:opacity-100 pointer-events-none',
-                    card.gradient
-                  )}
-                />
-
-                <div className="relative z-10 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div className={cn('rounded-2xl border p-4 shrink-0', card.iconColor)}>
-                      <Icon className="h-8 w-8" />
-                    </div>
-                    <span className={cn('rounded-full border px-3 py-1 text-xs font-extrabold uppercase tracking-widest', card.badgeColor)}>
-                      DEDICATED WORKSPACE
-                    </span>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-black text-foreground group-hover:text-primary transition-colors tracking-tight">
-                      {card.title}
-                    </h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {card.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="relative z-10 pt-8">
-                  <Link
-                    href={card.href}
-                    className={cn(
-                      'flex items-center justify-center gap-2 rounded-2xl font-black text-sm py-4 px-6 transition-all duration-200 shadow-lg group-hover:scale-[1.02] cursor-pointer w-full',
-                      card.btnColor
-                    )}
-                  >
-                    <span>{card.buttonText}</span>
-                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </div>
+        {/* 4 LARGE DEDICATED WORKSPACE MENU CARDS */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          
+          {/* CARD 1 — MATCHES / DIFFERS */}
+          <div className="group relative rounded-3xl border border-border/70 bg-card p-6 shadow-md hover:shadow-xl hover:border-emerald-500/50 transition-all flex flex-col justify-between space-y-6">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center">
+                <Target className="h-6 w-6" />
               </div>
-            );
-          })}
+              <h2 className="text-xl font-black text-foreground group-hover:text-emerald-400 transition-colors">
+                MATCHES / DIFFERS
+              </h2>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Trade based on the last digit matching or differing from your selected target digit.
+              </p>
+            </div>
+
+            <Link
+              href="/smart-r-ai/matches-differs"
+              className="w-full rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 px-4 text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all cursor-pointer"
+            >
+              <span>OPEN MATCHES / DIFFERS</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* CARD 2 — EVEN / ODD */}
+          <div className="group relative rounded-3xl border border-border/70 bg-card p-6 shadow-md hover:shadow-xl hover:border-violet-500/50 transition-all flex flex-col justify-between space-y-6">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-violet-500/10 text-violet-400 border border-violet-500/30 flex items-center justify-center">
+                <Scale className="h-6 w-6" />
+              </div>
+              <h2 className="text-xl font-black text-foreground group-hover:text-violet-400 transition-colors">
+                EVEN / ODD
+              </h2>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Trade based on whether the last digit will end in an Even (0,2,4,6,8) or Odd (1,3,5,7,9) number.
+              </p>
+            </div>
+
+            <Link
+              href="/smart-r-ai/even-odd"
+              className="w-full rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-extrabold py-3.5 px-4 text-xs flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 transition-all cursor-pointer"
+            >
+              <span>OPEN EVEN / ODD</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* CARD 3 — OVER / UNDER */}
+          <div className="group relative rounded-3xl border border-border/70 bg-card p-6 shadow-md hover:shadow-xl hover:border-blue-500/50 transition-all flex flex-col justify-between space-y-6">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/30 flex items-center justify-center">
+                <TrendingUp className="h-6 w-6" />
+              </div>
+              <h2 className="text-xl font-black text-foreground group-hover:text-blue-400 transition-colors">
+                OVER / UNDER
+              </h2>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Trade based on whether the last digit will be strictly greater or less than your threshold.
+              </p>
+            </div>
+
+            <Link
+              href="/smart-r-ai/over-under"
+              className="w-full rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3.5 px-4 text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+            >
+              <span>OPEN OVER / UNDER</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* CARD 4 — DIGIT CONTRACTS */}
+          <div className="group relative rounded-3xl border border-border/70 bg-card p-6 shadow-md hover:shadow-xl hover:border-amber-500/50 transition-all flex flex-col justify-between space-y-6">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center">
+                <Hash className="h-6 w-6" />
+              </div>
+              <h2 className="text-xl font-black text-foreground group-hover:text-amber-400 transition-colors">
+                DIGIT CONTRACTS
+              </h2>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Multi-digit frequency analysis and rolling distribution workspace.
+              </p>
+            </div>
+
+            <Link
+              href="/smart-r-ai/digits"
+              className="w-full rounded-2xl bg-amber-600 hover:bg-amber-500 text-white font-extrabold py-3.5 px-4 text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+            >
+              <span>OPEN DIGIT CONTRACTS</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
         </div>
+
       </div>
     </main>
   );
 }
 
-export default function MainTradingMenuPage() {
+export default function SmartRAIPage() {
   return (
     <Suspense fallback={<div className="min-h-dvh bg-background flex items-center justify-center text-muted-foreground">Loading DERIVE Trading Menu…</div>}>
-      <MainTradingMenuContent />
+      <SmartRAIMenuContent />
     </Suspense>
   );
 }

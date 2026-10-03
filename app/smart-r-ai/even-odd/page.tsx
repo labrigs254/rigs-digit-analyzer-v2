@@ -15,27 +15,26 @@ import {
   Wifi,
   Scale,
   Sparkles,
-  BarChart3,
 } from 'lucide-react';
 import type { OpenPosition } from '@/hooks/use-open-positions';
 
-// --- Shared Navigation Sub-Header ---
+// --- Shared Navigation Sub-Header with Mobile Touch Scroll ---
 function WorkspaceNavBar({ active }: { active: 'matches-differs' | 'even-odd' | 'over-under' | 'digits' }) {
   return (
-    <div className="w-full rounded-2xl border border-border/60 bg-card/80 p-3 backdrop-blur-md shadow-sm mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div className="w-full rounded-2xl border border-border/60 bg-card/80 p-2.5 sm:p-3 backdrop-blur-md shadow-sm mb-6 flex flex-col md:flex-row items-center justify-between gap-3">
       <Link
         href="/smart-r-ai"
-        className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors shrink-0"
+        className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors shrink-0 self-start md:self-auto"
       >
         <ChevronLeft className="h-4 w-4" />
         <span>← Trading Menu</span>
       </Link>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="w-full md:w-auto flex items-center gap-1.5 overflow-x-auto no-scrollbar scrollbar-none py-1 px-0.5">
         <Link
           href="/smart-r-ai/matches-differs"
           className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all',
+            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0',
             active === 'matches-differs'
               ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-sm'
               : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
@@ -46,7 +45,7 @@ function WorkspaceNavBar({ active }: { active: 'matches-differs' | 'even-odd' | 
         <Link
           href="/smart-r-ai/even-odd"
           className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all',
+            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0',
             active === 'even-odd'
               ? 'bg-violet-500/20 text-violet-400 border border-violet-500/40 shadow-sm'
               : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
@@ -57,7 +56,7 @@ function WorkspaceNavBar({ active }: { active: 'matches-differs' | 'even-odd' | 
         <Link
           href="/smart-r-ai/over-under"
           className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all',
+            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0',
             active === 'over-under'
               ? 'bg-blue-500/20 text-blue-400 border border-blue-500/40 shadow-sm'
               : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
@@ -68,7 +67,7 @@ function WorkspaceNavBar({ active }: { active: 'matches-differs' | 'even-odd' | 
         <Link
           href="/smart-r-ai/digits"
           className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all',
+            'px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0',
             active === 'digits'
               ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-sm'
               : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
@@ -147,47 +146,52 @@ function EvenOddWorkspaceContent() {
         hideAuth={true}
       />
 
-      <div className="flex-1 w-full max-w-5xl mx-auto px-4 lg:px-8 py-6 flex flex-col items-center">
+      <div className="flex-1 w-full max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col items-center">
         
         {/* Workspace Navigation Bar */}
         <WorkspaceNavBar active="even-odd" />
 
         {/* WORKSPACE TOP HEADER */}
-        <div className="w-full text-center space-y-3 mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-1 text-xs font-bold text-violet-400">
+        <div className="w-full text-center space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 px-3.5 py-1 text-[11px] sm:text-xs font-bold text-violet-400">
             <Scale className="h-3.5 w-3.5" />
             <span>DEDICATED WORKSPACE</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground uppercase">
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-foreground uppercase">
             EVEN / ODD WORKSPACE
           </h1>
-          <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto px-2">
             Select a market, choose Even or Odd, review the live analysis, then decide whether to trade.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-xs font-bold">
-            <span className="bg-card border px-3 py-1.5 rounded-xl">
-              Market: <span className="text-foreground">{activeSymbol?.underlying_symbol_name ?? 'Select Market'}</span>
-            </span>
-            <span className="bg-card border px-3 py-1.5 rounded-xl flex items-center gap-1.5">
-              Status: <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> <span className="text-emerald-400">LIVE</span>
-            </span>
-            <span className="bg-card border px-3 py-1.5 rounded-xl font-mono">
-              Quote: <span className="text-violet-400">{trading.currentTick ? trading.currentTick.quote.toFixed(pipSize) : '—'}</span>
-            </span>
-            <span className="bg-card border px-3 py-1.5 rounded-xl">
-              Last Digit: <span className="text-violet-400 font-extrabold">{trading.lastDigit !== null ? trading.lastDigit : '—'}</span>
-            </span>
+          {/* Quick Status Bar Mobile Grid */}
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-3 pt-2 text-xs font-bold">
+            <div className="bg-card border px-3 py-1.5 rounded-xl flex items-center justify-between sm:justify-start gap-1.5">
+              <span className="text-muted-foreground text-[10px] sm:text-xs uppercase">MARKET:</span>
+              <span className="text-foreground font-black text-xs truncate max-w-[100px] sm:max-w-none">{activeSymbol?.underlying_symbol_name ?? 'Select'}</span>
+            </div>
+            <div className="bg-card border px-3 py-1.5 rounded-xl flex items-center justify-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-emerald-400 font-extrabold text-xs">LIVE</span>
+            </div>
+            <div className="bg-card border px-3 py-1.5 rounded-xl font-mono flex items-center justify-between sm:justify-start gap-1.5">
+              <span className="text-muted-foreground font-sans text-[10px] sm:text-xs uppercase">Quote:</span>
+              <span className="text-violet-400 font-black text-xs">{trading.currentTick ? trading.currentTick.quote.toFixed(pipSize) : '—'}</span>
+            </div>
+            <div className="bg-card border px-3 py-1.5 rounded-xl flex items-center justify-between sm:justify-start gap-2">
+              <span className="text-muted-foreground text-[10px] sm:text-xs uppercase">DIGIT:</span>
+              <span className="text-2xl sm:text-3xl font-black text-violet-400 font-mono leading-none">{trading.lastDigit !== null ? trading.lastDigit : '—'}</span>
+            </div>
           </div>
         </div>
 
-        <div className="w-full max-w-3xl space-y-8">
+        <div className="w-full max-w-3xl space-y-6 sm:space-y-8">
           
           {/* SECTION 1 — SELECT MARKET */}
-          <section className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b pb-3">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 1 — MARKET</span>
-              <span className="text-xs text-muted-foreground">Select Deriv Market</span>
+          <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-3">
+            <div className="flex items-center justify-between border-b pb-2.5">
+              <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 1 — MARKET</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground">Select Deriv Market</span>
             </div>
             <SymbolSelector
               symbols={symbols}
@@ -197,105 +201,105 @@ function EvenOddWorkspaceContent() {
           </section>
 
           {/* SECTION 2 — CHOOSE EVEN / ODD CONTRACT */}
-          <section className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b pb-3">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 2 — CHOOSE CONTRACT</span>
+          <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-3">
+            <div className="flex items-center justify-between border-b pb-2.5">
+              <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 2 — CHOOSE CONTRACT</span>
               <span className="text-xs font-extrabold text-foreground">Selected: {contractChoice === 'DIGITEVEN' ? 'EVEN' : 'ODD'}</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <button
                 onClick={() => setContractChoice('DIGITEVEN')}
                 className={cn(
-                  'flex flex-col items-center justify-center rounded-3xl p-6 border transition-all cursor-pointer text-center space-y-2',
+                  'flex flex-col items-center justify-center rounded-3xl p-5 sm:p-6 border transition-all cursor-pointer text-center space-y-1.5 sm:space-y-2',
                   contractChoice === 'DIGITEVEN'
                     ? 'bg-blue-500/20 border-blue-500 text-blue-400 shadow-lg shadow-blue-500/20 scale-[1.02]'
                     : 'bg-muted/10 border-border/40 hover:bg-muted/40 text-foreground'
                 )}
               >
-                <span className="text-3xl font-black">EVEN</span>
+                <span className="text-2xl sm:text-3xl font-black">EVEN</span>
                 <span className="text-xs text-muted-foreground font-medium">Final digit will be 0, 2, 4, 6 or 8.</span>
               </button>
 
               <button
                 onClick={() => setContractChoice('DIGITODD')}
                 className={cn(
-                  'flex flex-col items-center justify-center rounded-3xl p-6 border transition-all cursor-pointer text-center space-y-2',
+                  'flex flex-col items-center justify-center rounded-3xl p-5 sm:p-6 border transition-all cursor-pointer text-center space-y-1.5 sm:space-y-2',
                   contractChoice === 'DIGITODD'
                     ? 'bg-orange-500/20 border-orange-500 text-orange-400 shadow-lg shadow-orange-500/20 scale-[1.02]'
                     : 'bg-muted/10 border-border/40 hover:bg-muted/40 text-foreground'
                 )}
               >
-                <span className="text-3xl font-black">ODD</span>
+                <span className="text-2xl sm:text-3xl font-black">ODD</span>
                 <span className="text-xs text-muted-foreground font-medium">Final digit will be 1, 3, 5, 7 or 9.</span>
               </button>
             </div>
           </section>
 
           {/* SECTION 3 — LIVE MARKET */}
-          <section className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b pb-3">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 3 — LIVE MARKET DATA</span>
+          <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-3">
+            <div className="flex items-center justify-between border-b pb-2.5">
+              <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 3 — LIVE MARKET DATA</span>
               <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5"><Wifi className="h-3.5 w-3.5"/> Streaming Ticks</span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Live Quote</span>
-                <span className="text-lg font-mono font-black text-foreground">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 text-center">
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-1">Live Quote</span>
+                <span className="text-sm sm:text-lg font-mono font-black text-foreground">
                   {trading.currentTick ? trading.currentTick.quote.toFixed(pipSize) : '—'}
                 </span>
               </div>
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Current Digit</span>
-                <span className="text-2xl font-black text-violet-400">
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-1">Current Digit</span>
+                <span className="text-xl sm:text-2xl font-black text-violet-400">
                   {trading.lastDigit !== null ? trading.lastDigit : '—'}
                 </span>
               </div>
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Ticks Received</span>
-                <span className="text-lg font-black text-foreground">{totalTicksCount}</span>
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-1">Ticks Received</span>
+                <span className="text-sm sm:text-lg font-black text-foreground">{totalTicksCount}</span>
               </div>
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Connection</span>
-                <span className="text-sm font-extrabold text-emerald-400">{trading.isConnected ? 'LIVE' : 'OFFLINE'}</span>
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-1">Connection</span>
+                <span className="text-xs sm:text-sm font-extrabold text-emerald-400">{trading.isConnected ? 'LIVE' : 'OFFLINE'}</span>
               </div>
             </div>
           </section>
 
           {/* SECTION 4 — SMART R EVEN / ODD ANALYSIS */}
-          <section className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b pb-3">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-violet-400 flex items-center gap-1.5">
+          <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-4 sm:space-y-6">
+            <div className="flex items-center justify-between border-b pb-2.5">
+              <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-violet-400 flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" /> SMART R EVEN / ODD ANALYSIS
               </span>
-              <span className="text-xs font-bold text-muted-foreground">Real Tick Distribution</span>
+              <span className="text-[10px] sm:text-xs font-bold text-muted-foreground">Real Distribution</span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Even Count</span>
-                <span className="text-xl font-black text-blue-400">{evenCount} / {sampleSize}</span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 text-center">
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-0.5">Even Count</span>
+                <span className="text-base sm:text-xl font-black text-blue-400">{evenCount} / {sampleSize}</span>
               </div>
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Odd Count</span>
-                <span className="text-xl font-black text-orange-400">{oddCount} / {sampleSize}</span>
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-0.5">Odd Count</span>
+                <span className="text-base sm:text-xl font-black text-orange-400">{oddCount} / {sampleSize}</span>
               </div>
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Even %</span>
-                <span className="text-2xl font-black text-blue-400">{evenPct}%</span>
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-0.5">Even %</span>
+                <span className="text-xl sm:text-2xl font-black text-blue-400">{evenPct}%</span>
               </div>
-              <div className="rounded-2xl border bg-muted/10 p-3">
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase block mb-1">Odd %</span>
-                <span className="text-2xl font-black text-orange-400">{oddPct}%</span>
+              <div className="rounded-2xl border bg-muted/10 p-2.5 sm:p-3">
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase block mb-0.5">Odd %</span>
+                <span className="text-xl sm:text-2xl font-black text-orange-400">{oddPct}%</span>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border/60 bg-muted/20 p-4 flex items-center justify-between">
+            <div className="rounded-2xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div>
-                <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest block mb-1">Analysis Edge</span>
+                <span className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-widest block mb-1">Analysis Edge</span>
                 <span className={cn(
-                  'text-lg font-black px-3 py-1 rounded-xl',
+                  'text-xs sm:text-sm font-black px-3 py-1 rounded-xl inline-block',
                   hasNoTicks
                     ? 'bg-yellow-500/20 text-yellow-400'
                     : Math.abs(evenPct - 50) > 6
@@ -305,7 +309,7 @@ function EvenOddWorkspaceContent() {
                   {hasNoTicks ? 'INSUFFICIENT DATA' : Math.abs(evenPct - 50) > 6 ? (evenPct > 50 ? 'EVEN BIAS DETECTED' : 'ODD BIAS DETECTED') : 'BALANCED (NO CLEAR EDGE)'}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground text-right">
+              <p className="text-[11px] text-muted-foreground">
                 Sample size: {sampleSize} ticks.
               </p>
             </div>
@@ -316,14 +320,14 @@ function EvenOddWorkspaceContent() {
                 className="flex items-center justify-between w-full text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
               >
                 <span>{showAdvanced ? '▼ Hide Advanced Analysis' : '▸ Advanced Analysis'}</span>
-                <span className="text-[10px] bg-muted px-2 py-0.5 rounded">Multi-window & Recent Digits</span>
+                <span className="text-[10px] bg-muted px-2 py-0.5 rounded">Multi-window</span>
               </button>
 
               {showAdvanced && (
                 <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 text-xs">
                   <div>
                     <span className="font-bold text-muted-foreground block mb-2">Analysis Window Sizes:</span>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {windowSizes.map((w) => (
                         <button
                           key={w}
@@ -341,7 +345,7 @@ function EvenOddWorkspaceContent() {
 
                   <div>
                     <span className="font-bold text-muted-foreground block mb-2">Recent 10 Digits:</span>
-                    <div className="flex gap-2 font-mono text-sm font-bold bg-muted/20 p-3 rounded-xl border">
+                    <div className="flex flex-wrap gap-2 font-mono text-sm font-bold bg-muted/20 p-3 rounded-xl border">
                       {prices.slice(-10).map((p, i) => {
                         const d = parseInt(p.toFixed(pipSize).slice(-1), 10);
                         return (
@@ -358,20 +362,20 @@ function EvenOddWorkspaceContent() {
           </section>
 
           {/* SECTION 5 — TRADE SETTINGS & PROPOSAL */}
-          <section className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b pb-3">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 5 — TRADE SETTINGS & PROPOSAL</span>
-              <span className="text-xs text-muted-foreground">Deriv Live Proposal</span>
+          <section className="rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-sm space-y-4 sm:space-y-6">
+            <div className="flex items-center justify-between border-b pb-2.5">
+              <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-violet-400">SECTION 5 — TRADE SETTINGS</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground">Deriv Live Proposal</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest mb-1.5 block">Duration (Ticks)</label>
+                <label className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest mb-1 block">Duration (Ticks)</label>
                 <select
                   aria-label="Duration Ticks"
                   value={trading.duration}
                   onChange={(e) => trading.setDuration(Number(e.target.value))}
-                  className="w-full bg-muted/20 border border-border/60 rounded-xl p-3 text-sm font-bold text-foreground focus:outline-none focus:ring-2 ring-violet-500"
+                  className="w-full bg-muted/20 border border-border/60 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold text-foreground focus:outline-none focus:ring-2 ring-violet-500"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d) => (
                     <option key={d} value={d}>{d} Tick{d > 1 ? 's' : ''}</option>
@@ -380,7 +384,7 @@ function EvenOddWorkspaceContent() {
               </div>
 
               <div>
-                <label className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest mb-1.5 block">Stake Amount (USD)</label>
+                <label className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest mb-1 block">Stake Amount (USD)</label>
                 <input
                   type="number"
                   min="0.35"
@@ -388,21 +392,21 @@ function EvenOddWorkspaceContent() {
                   aria-label="Stake USD"
                   value={trading.stake}
                   onChange={(e) => trading.setStake(e.target.value)}
-                  className="w-full bg-muted/20 border border-border/60 rounded-xl p-3 text-sm font-bold text-foreground focus:outline-none focus:ring-2 ring-violet-500"
+                  className="w-full bg-muted/20 border border-border/60 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold text-foreground focus:outline-none focus:ring-2 ring-violet-500"
                 />
               </div>
             </div>
 
-            <div className="rounded-2xl border border-violet-500/30 bg-violet-500/5 p-4 flex items-center justify-between">
+            <div className="rounded-2xl border border-violet-500/30 bg-violet-500/5 p-3.5 sm:p-4 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest block">Potential Payout</span>
-                <span className="text-2xl font-black text-violet-400">
+                <span className="text-xl sm:text-2xl font-black text-violet-400">
                   {trading.isProposalLoading ? 'Calculating…' : trading.proposal?.payout ? `$${trading.proposal.payout}` : '—'}
                 </span>
               </div>
               <div className="text-right">
                 <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest block">Net Profit</span>
-                <span className="text-base font-bold text-foreground">
+                <span className="text-xs sm:text-base font-bold text-foreground">
                   {trading.proposal?.payout ? `$${(trading.proposal.payout - Number(trading.stake)).toFixed(2)}` : '—'}
                 </span>
               </div>
@@ -411,7 +415,7 @@ function EvenOddWorkspaceContent() {
             <button
               disabled={!trading.proposal || trading.isProposalLoading}
               onClick={() => setShowConfirmModal(true)}
-              className="w-full rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-black py-4 text-base shadow-xl shadow-violet-500/20 transition-all cursor-pointer disabled:opacity-40"
+              className="w-full rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-black py-3.5 sm:py-4 text-sm sm:text-base shadow-xl shadow-violet-500/20 transition-all cursor-pointer disabled:opacity-40"
             >
               TRADE NOW
             </button>
@@ -420,10 +424,10 @@ function EvenOddWorkspaceContent() {
           {/* SECTION 6 — CONFIRMATION MODAL */}
           {showConfirmModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md p-4 animate-in fade-in">
-              <div className="w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-2xl space-y-6">
-                <h3 className="text-2xl font-black text-foreground text-center">CONFIRM YOUR TRADE</h3>
+              <div className="w-full max-w-md rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-2xl space-y-5">
+                <h3 className="text-xl sm:text-2xl font-black text-foreground text-center">CONFIRM YOUR TRADE</h3>
 
-                <div className="space-y-3 rounded-2xl border bg-muted/20 p-4 text-sm font-bold">
+                <div className="space-y-2.5 rounded-2xl border bg-muted/20 p-4 text-xs sm:text-sm font-bold">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Market:</span>
                     <span>{activeSymbol?.underlying_symbol_name}</span>
@@ -446,10 +450,10 @@ function EvenOddWorkspaceContent() {
                   </div>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-3">
                   <button
                     onClick={() => setShowConfirmModal(false)}
-                    className="flex-1 rounded-xl bg-muted py-3 font-bold text-foreground hover:bg-muted/80 transition-colors"
+                    className="flex-1 rounded-xl bg-muted py-3 font-bold text-xs sm:text-sm text-foreground hover:bg-muted/80 transition-colors"
                   >
                     CANCEL
                   </button>
@@ -459,7 +463,7 @@ function EvenOddWorkspaceContent() {
                       await trading.buyContract();
                       setShowConfirmModal(false);
                     }}
-                    className="flex-1 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-black py-3 shadow-lg shadow-violet-500/20 transition-all"
+                    className="flex-1 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-black py-3 text-xs sm:text-sm shadow-lg shadow-violet-500/20 transition-all"
                   >
                     {trading.isBuying ? 'BUYING...' : 'CONFIRM & TRADE'}
                   </button>
@@ -470,11 +474,11 @@ function EvenOddWorkspaceContent() {
 
           {/* Position Monitoring */}
           {activeOpenPos && (
-            <div className="rounded-3xl border-2 border-violet-500/50 bg-violet-500/5 p-6 space-y-4 animate-in fade-in">
+            <div className="rounded-3xl border-2 border-violet-500/50 bg-violet-500/5 p-4 sm:p-6 space-y-3 animate-in fade-in">
               <span className="text-[10px] font-extrabold text-violet-400 tracking-widest uppercase block">ACTIVE TRADE IN PROGRESS</span>
               <div className="flex justify-between items-center">
-                <span className="text-2xl font-black text-foreground">{activeOpenPos.contract_type}</span>
-                <span className="text-sm font-bold text-violet-400 flex items-center gap-1.5"><Activity className="h-4 w-4 animate-spin"/> RUNNING</span>
+                <span className="text-lg sm:text-2xl font-black text-foreground">{activeOpenPos.contract_type}</span>
+                <span className="text-xs sm:text-sm font-bold text-violet-400 flex items-center gap-1.5"><Activity className="h-4 w-4 animate-spin"/> RUNNING</span>
               </div>
             </div>
           )}
@@ -483,10 +487,10 @@ function EvenOddWorkspaceContent() {
             const profit = latestClosedPos.sell_price - latestClosedPos.buy_price;
             const isWon = profit > 0;
             return (
-              <div className={cn('rounded-3xl border p-6 text-center space-y-2 animate-in fade-in', isWon ? 'border-emerald-500/40 bg-emerald-500/5 text-emerald-400' : 'border-red-500/40 bg-red-500/5 text-red-400')}>
+              <div className={cn('rounded-3xl border p-4 sm:p-6 text-center space-y-2 animate-in fade-in', isWon ? 'border-emerald-500/40 bg-emerald-500/5 text-emerald-400' : 'border-red-500/40 bg-red-500/5 text-red-400')}>
                 <span className="text-[10px] font-extrabold tracking-widest uppercase block">TRADE RESULT</span>
-                <span className="text-3xl font-black block">{isWon ? 'WON 🎉' : 'LOST ❌'}</span>
-                <span className="text-sm font-bold text-muted-foreground block font-mono">{profit > 0 ? `+${profit.toFixed(2)} USD` : `${profit.toFixed(2)} USD`}</span>
+                <span className="text-2xl sm:text-3xl font-black block">{isWon ? 'WON 🎉' : 'LOST ❌'}</span>
+                <span className="text-xs sm:text-sm font-bold text-muted-foreground block font-mono">{profit > 0 ? `+${profit.toFixed(2)} USD` : `${profit.toFixed(2)} USD`}</span>
               </div>
             );
           })()}
